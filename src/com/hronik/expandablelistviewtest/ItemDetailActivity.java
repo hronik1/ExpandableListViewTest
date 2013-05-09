@@ -39,6 +39,8 @@ public class ItemDetailActivity extends FragmentActivity {
 			Bundle arguments = new Bundle();
 			arguments.putString(ItemDetailFragment.ARG_ITEM_ID, getIntent()
 					.getStringExtra(ItemDetailFragment.ARG_ITEM_ID));
+			arguments.putString(ItemDetailFragment.ARG_TYPE_ID, getIntent()
+					.getStringExtra(ItemDetailFragment.ARG_TYPE_ID));
 			ItemDetailFragment fragment = new ItemDetailFragment();
 			fragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()
