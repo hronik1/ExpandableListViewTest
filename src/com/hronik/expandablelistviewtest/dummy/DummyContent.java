@@ -13,28 +13,57 @@ import java.util.Map;
  */
 public class DummyContent {
 
-	/**
-	 * An array of sample (dummy) items.
-	 */
-	public static List<DummyItem> ITEMS = new ArrayList<DummyItem>();
+	public final static String BOOKS_KEY = "books";
+	public final static String MOVIES_KEY = "movies";
+	public final static String GAMES_KEY = "games";
 
 	/**
-	 * A map of sample (dummy) items, by ID.
+	 * A map of types of dummyitems to a map of instances of sample (dummy) items
 	 */
-	public static Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
+	public static Map<String, Map<String, DummyItem>> TYPE_MAP = new HashMap<String, Map<String, DummyItem>>();
 
 	static {
 		// Add 3 sample items.
-		addItem(new DummyItem("1", "Item 1"));
-		addItem(new DummyItem("2", "Item 2"));
-		addItem(new DummyItem("3", "Item 3"));
+		addItem(BOOKS_KEY, new DummyItem("1", "Book 1"));
+		addItem(BOOKS_KEY, new DummyItem("2", "Book 2"));
+		addItem(BOOKS_KEY, new DummyItem("3", "Book 3"));
+		addItem(MOVIES_KEY, new DummyItem("1", "Movie 1"));
+		addItem(MOVIES_KEY, new DummyItem("2", "Movie 2"));
+		addItem(GAMES_KEY, new DummyItem("1", "Game 1"));
+		addItem(GAMES_KEY, new DummyItem("2", "Game 2"));
+		addItem(GAMES_KEY, new DummyItem("3", "Game 3"));
+		addItem(GAMES_KEY, new DummyItem("4", "Game 4"));
 	}
 
-	private static void addItem(DummyItem item) {
-		ITEMS.add(item);
-		ITEM_MAP.put(item.id, item);
+	/**
+	 * Places a dummyitem in the map dictated by typeKey
+	 * 
+	 * @param typeKey key to dictate which map to add typeKey to
+	 * @param item item to be place, uses its id as the key to insert itself into its approprate map
+	 */
+	private static void addItem(String typeKey, DummyItem item) {
+		Map<String, DummyItem> itemMap = TYPE_MAP.get(typeKey);
+		if (itemMap == null)
+			itemMap = new HashMap<String, DummyItem>();
+		itemMap.put(item.id, item);
+		TYPE_MAP.put(typeKey, itemMap);
 	}
 
+	/**
+	 * gets the dummyitem located at itemKey location of map at typeKey location
+	 * 
+	 * @param typeKey key to dictate which map to search for the dummy item
+	 * @param itemKey key to find the dummy item within its appropriate map
+	 * @return the found dummy item, or null if does not exist
+	 */
+	public static DummyItem getItem(String typeKey, String itemKey) {
+		Map<String, DummyItem> itemMap = TYPE_MAP.get(typeKey);
+		if (itemMap == null)
+			return null;
+		else
+			return itemMap.get(itemKey);
+	}
+	
 	/**
 	 * A dummy item representing a piece of content.
 	 */
