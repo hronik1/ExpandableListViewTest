@@ -65,6 +65,16 @@ public class DummyContent {
 	}
 	
 	/**
+	 * returns the entire item map specified by type key
+	 * 
+	 * @param typeKey the key into typemap
+	 * @return the itemmap or null if does not exist
+	 */
+	public static Map<String, DummyItem> getItemMap(String typeKey) {
+		return TYPE_MAP.get(typeKey);
+	}
+	
+	/**
 	 * A dummy item representing a piece of content.
 	 */
 	public static class DummyItem {
