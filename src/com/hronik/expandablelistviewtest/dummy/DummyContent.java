@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -72,6 +73,66 @@ public class DummyContent {
 	 */
 	public static Map<String, DummyItem> getItemMap(String typeKey) {
 		return TYPE_MAP.get(typeKey);
+	}
+	
+	/**
+	 * gets the set of keys for types
+	 * 
+	 * @return set of keys of type, or null
+	 */
+	public static Set<String> getTypeKeySet() {
+		return TYPE_MAP.keySet();
+	}
+	
+	/**
+	 * gets all of the keys and returns them as an array
+	 * 
+	 * @return an Array representation of the type keys, or null
+	 */
+	public static String[] getTypeKeyArray() {
+		Set<String> keySet = TYPE_MAP.keySet();
+		String[] keyArray = null;
+		
+		if (keySet != null)
+			keyArray = keySet.toArray(new String[0]);
+		
+		return keyArray;
+	}
+	
+	/**
+	 * method to return an array representation of of all dummyItems for
+	 * a given typeKey
+	 * 
+	 * @param typeKey the key into the type map
+	 * @return an array of all dummyitems of a given type, or null
+	 */
+	public static DummyItem[] getDummyItemArrayForKey(String typeKey) {
+		Map<String, DummyItem> dummyItemMap = TYPE_MAP.get(typeKey);
+		
+		if (dummyItemMap != null && dummyItemMap.values() != null)
+			return dummyItemMap.values().toArray(new DummyItem[0]);
+		else
+			return null;
+	}
+	
+	/**
+	 * gets an ordered 2d array of dummyitems corresponding to the ordering
+	 * of the input typekeys
+	 * 
+	 * @param typeKeys the array containing the all of the keys
+	 * @return an ordered 2d array of all dummyitems corresponding to each key, or null
+	 */
+	public static DummyItem[][] getAllDummyItems(String[] typeKeys) {
+		if (typeKeys == null)
+			return null;
+		
+		DummyItem[][] dummyItems = new DummyItem[typeKeys.length][];
+		for (int i = 0; i < typeKeys.length; i++) {
+			String key = typeKeys[i];
+			dummyItems[i] = getDummyItemArrayForKey(key);
+		}
+		
+		return dummyItems;
 	}
 	
 	/**

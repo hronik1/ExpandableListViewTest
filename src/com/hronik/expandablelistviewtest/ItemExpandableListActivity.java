@@ -13,14 +13,14 @@ import android.support.v4.app.FragmentActivity;
  * vertical panes.
  * <p>
  * The activity makes heavy use of fragments. The list of items is a
- * {@link ItemListFragment} and the item details (if present) is a
+ * {@link ItemExpandableListFragment} and the item details (if present) is a
  * {@link ItemDetailFragment}.
  * <p>
- * This activity also implements the required {@link ItemListFragment.Callbacks}
+ * This activity also implements the required {@link ItemExpandableListFragment.Callbacks}
  * interface to listen for item selections.
  */
-public class ItemListActivity extends FragmentActivity implements
-		ItemListFragment.Callbacks {
+public class ItemExpandableListActivity extends FragmentActivity implements
+		ItemExpandableListFragment.Callbacks {
 
 	/**
 	 * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -42,7 +42,7 @@ public class ItemListActivity extends FragmentActivity implements
 
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
-			((ItemListFragment) getSupportFragmentManager().findFragmentById(
+			((ItemExpandableListFragment) getSupportFragmentManager().findFragmentById(
 					R.id.item_list)).setActivateOnItemClick(true);
 		}
 
@@ -50,7 +50,7 @@ public class ItemListActivity extends FragmentActivity implements
 	}
 
 	/**
-	 * Callback method from {@link ItemListFragment.Callbacks} indicating that
+	 * Callback method from {@link ItemExpandableListFragment.Callbacks} indicating that
 	 * the item with the given ID was selected.
 	 */
 	@Override

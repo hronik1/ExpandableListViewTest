@@ -8,7 +8,7 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context=".ItemListActivity" >
+    tools:context=".ItemExpandableListActivity" >
 
     <!--
     This layout is a two-pane layout for the Items
@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/item_list"
-        android:name="com.hronik.expandablelistviewtest.ItemListFragment"
+        android:name="com.hronik.expandablelistviewtest.ItemExpandableListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

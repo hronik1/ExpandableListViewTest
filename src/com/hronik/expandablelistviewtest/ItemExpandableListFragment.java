@@ -2,12 +2,18 @@ package com.hronik.expandablelistviewtest;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.ListView;
 
 import com.hronik.expandablelistviewtest.dummy.DummyContent;
+import com.hronik.expandablelistviewtest.dummy.DummyContent.DummyItem;
 
 /**
  * A list fragment representing a list of Items. This fragment also supports
@@ -18,8 +24,13 @@ import com.hronik.expandablelistviewtest.dummy.DummyContent;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class ItemListFragment extends ListFragment {
+public class ItemExpandableListFragment extends Fragment {
 
+	/**
+	 * The tag used for logcat
+	 */
+	private final String TAG = getClass().getName();
+	
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
 	 * activated item position. Only used on tablets.
@@ -63,7 +74,7 @@ public class ItemListFragment extends ListFragment {
 	 * Mandatory empty constructor for the fragment manager to instantiate the
 	 * fragment (e.g. upon screen orientation changes).
 	 */
-	public ItemListFragment() {
+	public ItemExpandableListFragment() {
 	}
 
 	@Override
@@ -71,11 +82,23 @@ public class ItemListFragment extends ListFragment {
 		super.onCreate(savedInstanceState);
 
 		// TODO: replace with a real list adapter.
-		setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-				android.R.layout.simple_list_item_activated_1,
-				android.R.id.text1, DummyContent.ITEMS));
+//		setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
+//				android.R.layout.simple_list_item_activated_1,
+//				android.R.id.text1, DummyContent.ITEMS));
 	}
-
+	
+	/**
+	 * callback for the creation of the user interface for the view
+	 */
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+	    Log.i(TAG, "onCreateView");
+	    
+	    View viewer = (View) inflater.inflate(R.layout.fragment_expandable_list_item, container, false);
+	    return viewer;
+	}
+	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
@@ -148,5 +171,74 @@ public class ItemListFragment extends ListFragment {
 		}
 
 		mActivatedPosition = position;
+	}
+	
+	public class MyExpandableListAdapter extends BaseExpandableListAdapter {
+
+		private String[] groups = DummyContent.getTypeKeyArray();
+		private DummyItem[][] children = DummyContent.getAllDummyItems(groups);
+		
+		@Override
+		public Object getChild(int groupPosition, int childPosition) {
+			//TODO check if validation will be needed
+			return children[groupPosition][childPosition];
+		}
+
+		@Override
+		public long getChildId(int groupPosition, int childPosition) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public View getChildView(int arg0, int arg1, boolean arg2, View arg3,
+				ViewGroup arg4) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public int getChildrenCount(int arg0) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public Object getGroup(int arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public int getGroupCount() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public long getGroupId(int arg0) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public View getGroupView(int arg0, boolean arg1, View arg2,
+				ViewGroup arg3) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public boolean hasStableIds() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean isChildSelectable(int arg0, int arg1) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+		
 	}
 }
