@@ -180,14 +180,15 @@ public class ItemExpandableListFragment extends Fragment {
 		
 		@Override
 		public Object getChild(int groupPosition, int childPosition) {
-			//TODO check if validation will be needed
-			return children[groupPosition][childPosition];
+			if (isChildPositionValid(groupPosition, childPosition))
+				return children[groupPosition][childPosition];
+			else
+				return null;
 		}
 
 		@Override
 		public long getChildId(int groupPosition, int childPosition) {
-			// TODO Auto-generated method stub
-			return 0;
+			return childPosition;
 		}
 
 		@Override
@@ -198,27 +199,33 @@ public class ItemExpandableListFragment extends Fragment {
 		}
 
 		@Override
-		public int getChildrenCount(int arg0) {
-			// TODO Auto-generated method stub
-			return 0;
+		public int getChildrenCount(int groupPosition) {
+			if (!isGroupPositionValid(groupPosition))
+				return 0;
+			
+			DummyItem[] items = children[groupPosition];
+			if (items != null)
+				return items.length;
+			else
+				return 0;
 		}
 
 		@Override
-		public Object getGroup(int arg0) {
-			// TODO Auto-generated method stub
-			return null;
+		public Object getGroup(int groupPosition) {
+			if (isGroupPositionValid(groupPosition))
+				return groups[groupPosition];
+			else
+				return null;
 		}
 
 		@Override
 		public int getGroupCount() {
-			// TODO Auto-generated method stub
-			return 0;
+			return groups.length;
 		}
 
 		@Override
-		public long getGroupId(int arg0) {
-			// TODO Auto-generated method stub
-			return 0;
+		public long getGroupId(int groupPosition) {
+			return groupPosition;
 		}
 
 		@Override
@@ -230,15 +237,39 @@ public class ItemExpandableListFragment extends Fragment {
 
 		@Override
 		public boolean hasStableIds() {
-			// TODO Auto-generated method stub
-			return false;
+			return true;
 		}
 
 		@Override
-		public boolean isChildSelectable(int arg0, int arg1) {
-			// TODO Auto-generated method stub
-			return false;
+		public boolean isChildSelectable(int groupPosition, int childPosition) {
+			return isChildPositionValid(groupPosition, childPosition);
 		}
 		
+		/**
+		 * simple helper method to check if groupPosition is in valid range
+		 * 
+		 * @param groupPosition index into groups and first dimension of children
+		 * @return true if valid, false otherwise
+		 */
+		private boolean isGroupPositionValid(int groupPosition) {
+			return (groups != null && 
+					children != null && 
+					groupPosition >= 0 &&
+					groupPosition < groups.length &&
+					groupPosition < children.length);
+		}
+		
+		/**
+		 * simple helper method to check validity on child position
+		 * 
+		 * @param groupPosition group of children index
+		 * @param childPosition index of child within respective group
+		 * @return true if valid, false otherwise
+		 */
+		private boolean isChildPositionValid(int groupPosition, int childPosition) {
+			return (isGroupPositionValid(groupPosition) &&
+					childPosition >= 0 &&
+					childPosition < children[groupPosition].length);
+		}
 	}
 }
