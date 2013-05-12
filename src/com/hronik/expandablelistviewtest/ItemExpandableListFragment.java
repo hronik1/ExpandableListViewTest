@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -65,7 +66,7 @@ public class ItemExpandableListFragment extends Fragment {
 		/**
 		 * Callback for when an item has been selected.
 		 */
-		public void onItemSelected(String id);
+		public void onItemSelected(String typeKey, String itemKey);
 	}
 
 	/**
@@ -74,7 +75,7 @@ public class ItemExpandableListFragment extends Fragment {
 	 */
 	private static Callbacks sDummyCallbacks = new Callbacks() {
 		@Override
-		public void onItemSelected(String id) {
+		public void onItemSelected(String typeKey, String itemKey) {
 		}
 	};
 
@@ -108,6 +109,15 @@ public class ItemExpandableListFragment extends Fragment {
 	    theELV = (ExpandableListView) viewer.findViewById(R.id.fragment_expandable_list_item_elv);
 	    theELAdapter = new MyExpandableListAdapter();
 	    theELV.setAdapter(theELAdapter);
+	    theELV.setOnChildClickListener(new OnChildClickListener() {
+			@Override
+			public boolean onChildClick(ExpandableListView parent, View v,
+					int groupPosition, int childPosition, long id) {
+				mCallbacks.onItemSelected((String) theELAdapter.getGroup(groupPosition), 
+						((DummyItem) theELAdapter.getChild(groupPosition, childPosition)).id);
+				return true;
+			}
+	    });
 	    return viewer;
 	}
 	

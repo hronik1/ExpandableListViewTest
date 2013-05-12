@@ -54,13 +54,14 @@ public class ItemExpandableListActivity extends FragmentActivity implements
 	 * the item with the given ID was selected.
 	 */
 	@Override
-	public void onItemSelected(String id) {
+	public void onItemSelected(String typeKey, String itemKey) {
 		if (mTwoPane) {
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
 			Bundle arguments = new Bundle();
-			arguments.putString(ItemDetailFragment.ARG_ITEM_ID, id);
+			arguments.putString(ItemDetailFragment.ARG_ITEM_ID, itemKey);
+			arguments.putString(ItemDetailFragment.ARG_TYPE_ID, typeKey);
 			ItemDetailFragment fragment = new ItemDetailFragment();
 			fragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()
@@ -70,7 +71,8 @@ public class ItemExpandableListActivity extends FragmentActivity implements
 			// In single-pane mode, simply start the detail activity
 			// for the selected item ID.
 			Intent detailIntent = new Intent(this, ItemDetailActivity.class);
-			detailIntent.putExtra(ItemDetailFragment.ARG_ITEM_ID, id);
+			detailIntent.putExtra(ItemDetailFragment.ARG_ITEM_ID, itemKey);
+			detailIntent.putExtra(ItemDetailFragment.ARG_TYPE_ID, typeKey);
 			startActivity(detailIntent);
 		}
 	}
