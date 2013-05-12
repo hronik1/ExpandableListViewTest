@@ -42,8 +42,8 @@ public class ItemExpandableListActivity extends FragmentActivity implements
 
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
-			((ItemExpandableListFragment) getSupportFragmentManager().findFragmentById(
-					R.id.item_list)).setActivateOnItemClick(true);
+//			((ItemExpandableListFragment) getSupportFragmentManager().findFragmentById(
+//					R.id.item_list)).setActivateOnItemClick(true);
 		}
 
 		// TODO: If exposing deep links into your app, handle intents here.

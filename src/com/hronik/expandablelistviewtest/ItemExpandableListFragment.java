@@ -5,12 +5,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.hronik.expandablelistviewtest.dummy.DummyContent;
 import com.hronik.expandablelistviewtest.dummy.DummyContent.DummyItem;
@@ -47,7 +52,10 @@ public class ItemExpandableListFragment extends Fragment {
 	 * The current activated item position. Only used on tablets.
 	 */
 	private int mActivatedPosition = ListView.INVALID_POSITION;
-
+	
+	private ExpandableListView theELV; 
+	private ExpandableListAdapter theELAdapter;
+	
 	/**
 	 * A callback interface that all activities containing this fragment must
 	 * implement. This mechanism allows activities to be notified of item
@@ -80,7 +88,8 @@ public class ItemExpandableListFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		Log.i(TAG, "onCreate");
+		
 		// TODO: replace with a real list adapter.
 //		setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
 //				android.R.layout.simple_list_item_activated_1,
@@ -96,6 +105,9 @@ public class ItemExpandableListFragment extends Fragment {
 	    Log.i(TAG, "onCreateView");
 	    
 	    View viewer = (View) inflater.inflate(R.layout.fragment_expandable_list_item, container, false);
+	    theELV = (ExpandableListView) viewer.findViewById(R.id.fragment_expandable_list_item_elv);
+	    theELAdapter = new MyExpandableListAdapter();
+	    theELV.setAdapter(theELAdapter);
 	    return viewer;
 	}
 	
@@ -104,11 +116,11 @@ public class ItemExpandableListFragment extends Fragment {
 		super.onViewCreated(view, savedInstanceState);
 
 		// Restore the previously serialized activated item position.
-		if (savedInstanceState != null
-				&& savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
-			setActivatedPosition(savedInstanceState
-					.getInt(STATE_ACTIVATED_POSITION));
-		}
+//		if (savedInstanceState != null
+//				&& savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
+//			setActivatedPosition(savedInstanceState
+//					.getInt(STATE_ACTIVATED_POSITION));
+//		}
 	}
 
 	@Override
@@ -132,15 +144,15 @@ public class ItemExpandableListFragment extends Fragment {
 		mCallbacks = sDummyCallbacks;
 	}
 
-	@Override
-	public void onListItemClick(ListView listView, View view, int position,
-			long id) {
-		super.onListItemClick(listView, view, position, id);
-
-		// Notify the active callbacks interface (the activity, if the
-		// fragment is attached to one) that an item has been selected.
-		mCallbacks.onItemSelected(DummyContent.ITEMS.get(position).id);
-	}
+//	@Override
+//	public void onListItemClick(ListView listView, View view, int position,
+//			long id) {
+//		super.onListItemClick(listView, view, position, id);
+//
+//		// Notify the active callbacks interface (the activity, if the
+//		// fragment is attached to one) that an item has been selected.
+//		mCallbacks.onItemSelected(DummyContent.ITEMS.get(position).id);
+//	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
@@ -151,27 +163,27 @@ public class ItemExpandableListFragment extends Fragment {
 		}
 	}
 
-	/**
-	 * Turns on activate-on-click mode. When this mode is on, list items will be
-	 * given the 'activated' state when touched.
-	 */
-	public void setActivateOnItemClick(boolean activateOnItemClick) {
-		// When setting CHOICE_MODE_SINGLE, ListView will automatically
-		// give items the 'activated' state when touched.
-		getListView().setChoiceMode(
-				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
-						: ListView.CHOICE_MODE_NONE);
-	}
-
-	private void setActivatedPosition(int position) {
-		if (position == ListView.INVALID_POSITION) {
-			getListView().setItemChecked(mActivatedPosition, false);
-		} else {
-			getListView().setItemChecked(position, true);
-		}
-
-		mActivatedPosition = position;
-	}
+//	/**
+//	 * Turns on activate-on-click mode. When this mode is on, list items will be
+//	 * given the 'activated' state when touched.
+//	 */
+//	public void setActivateOnItemClick(boolean activateOnItemClick) {
+//		// When setting CHOICE_MODE_SINGLE, ListView will automatically
+//		// give items the 'activated' state when touched.
+//		getListView().setChoiceMode(
+//				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
+//						: ListView.CHOICE_MODE_NONE);
+//	}
+//
+//	private void setActivatedPosition(int position) {
+//		if (position == ListView.INVALID_POSITION) {
+//			getListView().setItemChecked(mActivatedPosition, false);
+//		} else {
+//			getListView().setItemChecked(position, true);
+//		}
+//
+//		mActivatedPosition = position;
+//	}
 	
 	public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
@@ -192,11 +204,14 @@ public class ItemExpandableListFragment extends Fragment {
 		}
 
 		@Override
-		public View getChildView(int arg0, int arg1, boolean arg2, View arg3,
-				ViewGroup arg4) {
-			// TODO Auto-generated method stub
-			return null;
-		}
+        public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
+                View convertView, ViewGroup parent) {
+			if (!isChildPositionValid(groupPosition, childPosition))
+				return null;
+            TextView textView = getGenericView();
+            textView.setText(getChild(groupPosition, childPosition).toString());
+            return textView;
+        }
 
 		@Override
 		public int getChildrenCount(int groupPosition) {
@@ -229,11 +244,14 @@ public class ItemExpandableListFragment extends Fragment {
 		}
 
 		@Override
-		public View getGroupView(int arg0, boolean arg1, View arg2,
-				ViewGroup arg3) {
-			// TODO Auto-generated method stub
-			return null;
-		}
+        public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
+                ViewGroup parent) {
+			if (!isGroupPositionValid(groupPosition))
+				return null;
+            TextView textView = getGenericView();
+            textView.setText(getGroup(groupPosition).toString());
+            return textView;
+        }
 
 		@Override
 		public boolean hasStableIds() {
@@ -245,6 +263,20 @@ public class ItemExpandableListFragment extends Fragment {
 			return isChildPositionValid(groupPosition, childPosition);
 		}
 		
+        public TextView getGenericView() {
+            // Layout parameters for the ExpandableListView
+            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
+            		ViewGroup.LayoutParams.MATCH_PARENT, 64);
+            
+            TextView textView = new TextView(getActivity());
+            textView.setLayoutParams(lp);
+            // Center the text vertically
+            textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+            // Set the text starting position
+            textView.setPadding(36, 0, 0, 0);
+            return textView;
+        }
+        
 		/**
 		 * simple helper method to check if groupPosition is in valid range
 		 * 
